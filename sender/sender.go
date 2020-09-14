@@ -17,7 +17,7 @@ func Sender() {
 	Unicast_send(d, c)
 }
 
-// UserInput
+// UserInput prompts user for the IDdestination process and the message
 func UserInput() (string, string) {
 	reader := bufio.NewReader(os.Stdin) // input = send 2 Hello
 	text, _ := reader.ReadString('\n')  // text = "send 2 Hello\n"
@@ -55,6 +55,7 @@ func Unicast_send(destination, message string) {
 	return
 }
 
+// Dialer
 func Dialer(ip, port string) (conn net.Conn) {
 	address := ip + ":" + port
 	c, err := net.Dial("tcp", address)

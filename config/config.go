@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-// Display prints out config file in an appropriate format
+// Display prints out extracted data to the screen
 func Display(minDelay, maxDelay int, id, ip, port []string) {
 	fmt.Println("---Configuration File Read---")
 	fmt.Printf("Minimum Delay Time: %d(ms)\n", minDelay)
@@ -19,14 +19,14 @@ func Display(minDelay, maxDelay int, id, ip, port []string) {
 	fmt.Println("-----------------------------")
 }
 
-//Extracts the min, max, and ports from config file and returns them
+// Extract extracts the min, max, and ports from the string array that contains configuration file's data
 func Extract(str []string) (int, int, []string, []string, []string) {
 	time := strings.Split(str[0], " ")
-	min, err := strconv.Atoi(time[0])
+	min, err := strconv.Atoi(time[0]) // converts time from string to integer
 	if err != nil {
 		fmt.Println(err)
 	}
-	max, err := strconv.Atoi(time[1])
+	max, err := strconv.Atoi(time[1]) // converts time from string to integer
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -43,7 +43,7 @@ func Extract(str []string) (int, int, []string, []string, []string) {
 	return min, max, ids, ips, ports
 }
 
-//Line by line, stores elements of config file
+//ReadConfig reads in config file line by line and stores them in an array
 func ReadConfig() []string {
 	file, err := os.Open("config.txt")
 	if err != nil {
