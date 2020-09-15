@@ -55,7 +55,7 @@ shown on the terminal window for each sending and receiving process.
 
 # Architecture and Design
 
-![Diagram](diagram.png)
+![Diagram](Diagram.png)
 
 ### Config
 Package config provides methods that allows the process to read the
