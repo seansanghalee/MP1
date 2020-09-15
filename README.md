@@ -55,6 +55,8 @@ shown on the terminal window for each sending and receiving process.
 
 # Architecture and Design
 
+![Diagram](diagram.png)
+
 ### Config
 Package config provides methods that allows the process to read the
 configuration file and extract necessary data. Also, it has a method
