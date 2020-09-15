@@ -61,11 +61,11 @@ Package config provides methods that allows the process to read  configuration f
 extract necessary data and display them to the window.
 
 ###Packet
-There is a struct type named Packet that holds the message taken from user input.
+There is a struct type named Packet that stores the sender's process ID and the message taken from user input.
 It is then encoded using gob and sent through TCP network connection.
 ```
 type Packet struct {
-    Message string
+    Source, Message string
 }
 ```
 

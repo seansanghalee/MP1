@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Receiver takes the port and starts listening for incoming messages and decodes them
 func Receiver(x string) {
 	for {
 		l, err := net.Listen("tcp", ":"+x)
@@ -25,18 +26,18 @@ func Receiver(x string) {
 		dec := gob.NewDecoder(c) // read from the channnel
 		var p packet.Packet
 		dec.Decode(&p)
-		Unicast_receive(c.RemoteAddr(), p.Message)
+		Unicast_receive(p.Source, p.Message)
 		c.Close()
 		l.Close()
 	}
 }
 
 // Unicast_receive delivers the message received from the source process
-func Unicast_receive(source net.Addr, message string) {
+func Unicast_receive(source, message string) {
 
 	t := time.Now()
-	myTime := t.Format(time.RFC3339) + "\n"
-	fmt.Printf("Received [%s] from process %s, system time is %s", message, source, myTime) // if we can, fix it so that process id shows up
+	myTime := t.Format(time.StampMilli) + "\n"
+	fmt.Printf("Received [%s] from process %s, system time is %s", message, source, myTime)
 
 	return
 }

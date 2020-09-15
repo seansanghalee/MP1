@@ -6,56 +6,60 @@ import (
 	"bufio"
 	"encoding/gob"
 	"fmt"
+	"math/rand"
 	"net"
 	"os"
 	"strings"
 	"time"
 )
 
-func Sender() {
+// Sender contains three methods that
+// 1. asks for user input
+// 2. creates a packet to send
+// 3. sends over the packet through TCP channel
+func Sender(ID string) {
 	d, c := UserInput()
-	Unicast_send(d, c)
+	p := packet.Construct(ID, c)
+	go Unicast_send(d, p)
 }
 
-// UserInput prompts user for the IDdestination process and the message
+// UserInput prompts user for the ID of destination process and the message
 func UserInput() (string, string) {
-	reader := bufio.NewReader(os.Stdin) // input = send 2 Hello
-	text, _ := reader.ReadString('\n')  // text = "send 2 Hello\n"
-	str := strings.Split(text, " ")     // str = ["send", "2", "Hello"]
+	reader := bufio.NewReader(os.Stdin)
+	text, _ := reader.ReadString('\n')
+	str := strings.Split(text, " ")
 	d := str[1]
 	content := strings.TrimSpace(str[2])
+	t := time.Now()
+	myTime := t.Format(time.StampMilli) + "\n"
+	fmt.Printf("Sent [%s] to process %s, system time is %s", content, d, myTime)
 	return d, content
 }
 
 // Unicast_send sends message to the destination process
-func Unicast_send(destination, message string) {
+func Unicast_send(destination string, packet packet.Packet) {
 	file := config.ReadConfig()
-	_, _, ids, ips, ports := config.Extract(file)
+	min, max, ids, ips, ports := config.Extract(file)
 	location := 0
 	for i := range ids {
 		if ids[i] == destination {
 			location = i
 		}
-	}
+	} // gets the index of the destination process from the configuration file
+
+	rand.Seed(time.Now().UnixNano())
+	duration := min + rand.Intn(max-min)
+	time.Sleep(time.Duration(duration) * time.Millisecond) // creates a delay that simulates real-life network delay
 
 	c := Dialer(ips[location], ports[location])
 	enc := gob.NewEncoder(c)
-	packet := packet.Construct(message)
 	enc.Encode(packet)
-	t := time.Now()
-	myTime := t.Format(time.RFC3339) + "\n"
-	fmt.Printf("Sent [%s] to process %s, system time is %s", message, destination, myTime)
 	c.Close()
-
-	// rand.Seed(time.Now().UnixNano())
-	// var min, max int
-	// duration := min + rand.Intn(max - min)
-	// time.Sleep(duration * time.Millisecond)
 
 	return
 }
 
-// Dialer
+// Dialer establishes a connection with the destination tcp server
 func Dialer(ip, port string) (conn net.Conn) {
 	address := ip + ":" + port
 	c, err := net.Dial("tcp", address)
@@ -63,5 +67,6 @@ func Dialer(ip, port string) (conn net.Conn) {
 		fmt.Println(err)
 		return
 	}
+
 	return c
 }

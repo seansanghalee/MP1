@@ -14,7 +14,7 @@ func main() {
 		ID, IP, PORT string
 	)
 
-	arguments := os.Args
+	arguments := os.Args // takes user input for ID, IP and Port number for current process
 	if len(arguments) == 1 {
 		fmt.Println("Please provide ID:IP:Port")
 		return
@@ -30,12 +30,12 @@ func main() {
 
 	file := config.ReadConfig()
 	minDelay, maxDelay, ids, ips, ports = config.Extract(file)
-	config.Display(minDelay, maxDelay, ids, ips, ports)
+	config.Display(minDelay, maxDelay, ids, ips, ports) //Displays config for UI benefit
 
-	go receiver.Receiver(PORT) // thread 1 : listen + receive
+	go receiver.Receiver(PORT) // thread 1 : listen and receive
 
 	for {
-		sender.Sender() // thread 2 : dial + send
+		sender.Sender(ID) // thread 2 : dial and send
 	}
 
 }

@@ -33,7 +33,7 @@ func Extract(str []string) (int, int, []string, []string, []string) {
 
 	var ids, ips, ports []string
 
-	for i := 1; i < len(str); i++ {
+	for i := 1; i < len(str); i++ { // extracts IDs, IP addresses and Port #'s and store them in three separate arrays
 		temp := strings.Split(str[i], " ")
 		ids = append(ids, temp[0])
 		ips = append(ips, temp[1])
@@ -43,7 +43,7 @@ func Extract(str []string) (int, int, []string, []string, []string) {
 	return min, max, ids, ips, ports
 }
 
-//ReadConfig reads in config file line by line and stores them in an array
+//ReadConfig reads in the configuration file line by line and stores each line in an array
 func ReadConfig() []string {
 	file, err := os.Open("config.txt")
 	if err != nil {
